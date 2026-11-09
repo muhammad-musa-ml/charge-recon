@@ -6,8 +6,9 @@ budget is not spent.
 
 replay() is a fold over the whole event list, sorted by (date, lifecycle step,
 event id) and de-duplicated by event id, so the order events arrive in cannot
-change the outcome. An event that does not fit the machine is skipped and
-reported as a Violation; it never changes a payment.
+change the outcome. Within one date an event that does not fit yet is tried
+again after the rest of that date. An event that still does not fit is skipped
+and reported as a Violation; it never changes a payment.
 
 The return rules below are settings of this model, not a statement of the Nacha
 rules: R01 may be presented again until three attempts are spent, R02, R03 and
@@ -39,7 +40,7 @@ UNKNOWN_RETURN = ReturnRule("banking", 2, False)
 
 
 def rule_for(code):
-    return RETURN_RULES.get(code, UNKNOWN_RETURN)
+    return RETURN_RULES.get(code.strip().upper(), UNKNOWN_RETURN)
 
 
 def banking_days_between(start, end):
@@ -140,7 +141,7 @@ def _step(payment, event):
             payment.payment_id, payment.key, payment.amount_cents, SETTLED, payment.attempt, event.on, ""
         )
     if kind == "returned":
-        if not event.code:
+        if not event.code.strip():
             return "returned event has no return code"
         if state == SUBMITTED:
             return Payment(
@@ -172,11 +173,27 @@ def replay(events):
             usable.append(next(iter(versions)))
     usable.sort(key=lambda e: (e.on, STEP.get(e.kind, 9), e.event_id))
     payments = {}
-    for e in usable:
-        result = _step(payments.get(e.payment_id), e)
-        if isinstance(result, str):
-            violations.append(Violation(e.payment_id, e.event_id, result))
-        else:
-            payments[e.payment_id] = result
+    start = 0
+    while start < len(usable):
+        end = start
+        while end < len(usable) and usable[end].on == usable[start].on:
+            end += 1
+        day = usable[start:end]
+        start = end
+        # Dates carry no time of day, so an event that does not fit yet may fit after
+        # the rest of its day: a retry dated the day of the return that precedes it.
+        while day:
+            deferred, reasons = [], {}
+            for e in day:
+                result = _step(payments.get(e.payment_id), e)
+                if isinstance(result, str):
+                    deferred.append(e)
+                    reasons[e.event_id] = result
+                else:
+                    payments[e.payment_id] = result
+            if len(deferred) == len(day):
+                violations.extend(Violation(e.payment_id, e.event_id, reasons[e.event_id]) for e in deferred)
+                break
+            day = deferred
     violations.sort(key=lambda v: (v.payment_id, v.event_id, v.reason))
     return Replay(payments, tuple(violations))

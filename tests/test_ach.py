@@ -115,6 +115,43 @@ class Returns(unittest.TestCase):
         self.assertEqual(len(outside.violations), 1)
 
 
+class SameDay(unittest.TestCase):
+    def test_a_retry_dated_the_day_of_the_return_is_still_a_retry(self):
+        events = [
+            ev("created", d(1), 0), ev("submitted", d(1), 0), ev("returned", d(3), 0, "R01"),
+            ev("submitted", d(3), 1), ev("settled", d(5), 1),
+        ]
+        r = run(*events)
+        p = r.payments["pay1"]
+        self.assertEqual((p.state, p.attempt, p.collected_cents, r.violations), (SETTLED, 2, 1450, ()))
+        for perm in itertools.permutations(events):
+            self.assertEqual(run(*perm), r)
+
+    def test_an_event_that_never_fits_is_still_a_violation_on_a_busy_day(self):
+        events = [ev("created", d(1), 0), ev("submitted", d(1), 0), ev("submitted", d(1), 1)]
+        r = run(*events)
+        self.assertEqual(r.payments["pay1"].state, SUBMITTED)
+        self.assertEqual([v.reason for v in r.violations], ["cannot submit from submitted"])
+
+    def test_nothing_is_retried_for_a_final_code_on_the_same_day(self):
+        events = [ev("created", d(1), 0), ev("submitted", d(1), 0), ev("returned", d(3), 0, "R02"), ev("submitted", d(3), 1)]
+        r = run(*events)
+        self.assertTrue(r.payments["pay1"].final_failure)
+        self.assertEqual(len(r.violations), 1)
+
+
+class CodeSpelling(unittest.TestCase):
+    def test_lower_case_and_padded_codes_follow_the_same_rule(self):
+        for spelled in ["R01", "r01", "R01 ", " r01"]:
+            with self.subTest(spelled=spelled):
+                r = run(
+                    ev("created", d(1), 0), ev("submitted", d(1), 0), ev("returned", d(2), 0, spelled),
+                    ev("submitted", d(3), 1),
+                )
+                p = r.payments["pay1"]
+                self.assertEqual((p.state, p.attempt, p.final_failure, r.violations), (SUBMITTED, 2, False, ()))
+
+
 class Illegal(unittest.TestCase):
     def test_each_illegal_move_is_a_violation_and_changes_nothing(self):
         created = [ev("created", d(1), 0)]
@@ -153,12 +190,18 @@ class Delivery(unittest.TestCase):
 
     def test_every_arrival_order_gives_the_same_result(self):
         expected = run(*self.EVENTS)
+        p = expected.payments["pay1"]
+        self.assertEqual((p.state, p.attempt, p.collected_cents, expected.violations), (SETTLED, 2, 1450, ()))
         for perm in itertools.permutations(self.EVENTS):
             self.assertEqual(run(*perm), expected)
 
     def test_shuffles_with_duplicates_and_a_late_return(self):
-        events = self.EVENTS + [ev("returned", d(9), 2, "R01", pid="pay1")]
+        # d(7) is a Tuesday and d(10) a Friday: three weekdays later, past the two-day window
+        events = self.EVENTS + [ev("returned", d(10), 2, "R01", pid="pay1")]
         expected = run(*events)
+        self.assertEqual(expected.payments["pay1"].state, SETTLED)
+        self.assertEqual(len(expected.violations), 1)
+        self.assertIn("window", expected.violations[0].reason)
         rng = random.Random(7)
         for _ in range(200):
             mixed = events + rng.sample(events, 3)

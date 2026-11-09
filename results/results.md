@@ -1,16 +1,18 @@
 # Results
 
-Synthetic data only. 20 seeds, 6657 charge keys in all (287 to 372 per seed), 779 of them with an injected fault (29 to 55 per seed).
+Synthetic data only. 20 seeds, 6657 charge keys in all (287 to 372 per seed), 779 of them with a planted mismatch that must be reported (29 to 55 per seed). Late returns, re-sent and corrected files, repeated deliveries and in-flight payments are also injected; they must raise no finding, so they are not in the 779.
 
 | approach | keys matching their label exactly | missed | spurious | wrong kinds |
 |---|---|---|---|---|
 | this pipeline | 6657 of 6657 | 0 | 0 | 0 |
 | add up every row of every file, then the same ACH replay | 4130 of 6657 | 0 | 2334 | 193 |
-| this ingest, then count every settled event as collected | 6164 of 6657 | 124 | 360 | 0 |
+| this ingest, then count every settled event as collected | 6164 of 6657 | 124 | 360 | 9 |
 
 Per seed, the plain row-adding approach matched 35.2% to 78.2% of keys and the settled-event count 90.1% to 94.1%.
 
-Side channels over all seeds: ACH violations seen 78 of 78 expected; quarantined files seen 15 of 15 expected; pending payments matched in 20 of 20 seeds; store and report identical under a second arrival order in 20 of 20 seeds.
+Side channels over all seeds: ACH violations seen 78 of 78 expected, on the same payments in 20 of 20 seeds; quarantined files seen 15 of 15 expected; pending payments matched in 20 of 20 seeds; store and report identical under a second arrival order in 20 of 20 seeds.
+
+Kinds of finding the seeded faults can produce: 6 of 8. COLLECTED_NOT_POSTED and CONFLICT appear only in unit tests.
 
 ## Scenarios injected, all seeds
 

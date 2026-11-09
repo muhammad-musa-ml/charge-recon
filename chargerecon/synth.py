@@ -77,6 +77,7 @@ class Truth:
     violations: int
     quarantined_files: int
     injected: Counter = field(default_factory=Counter)
+    violation_payments: set = field(default_factory=set)
 
 
 @dataclass
@@ -181,6 +182,7 @@ def build(seed, units=40):
     events = []
     counter = [0]
     violations = 0
+    violation_pids = set()
     injected = Counter()
 
     def add_events(pid, key, amount, d0, steps):
@@ -244,6 +246,7 @@ def build(seed, units=40):
                         add_events(pid, key, cents, d0, steps)
                     if name == "return_after_window":
                         violations += 1
+                        violation_pids.add(pid)
                     if name == "in_flight":
                         pending.add(key)
                     if name != "drop_posting":
@@ -294,4 +297,5 @@ def build(seed, units=40):
     events = events + [ev for ev in events if rng.random() < 0.05]
     rng.shuffle(events)
 
-    return World(seed, Truth(expected, labels, pending, scenarios, violations, quarantined, injected), deliveries, events)
+    truth = Truth(expected, labels, pending, scenarios, violations, quarantined, injected, violation_pids)
+    return World(seed, truth, deliveries, events)

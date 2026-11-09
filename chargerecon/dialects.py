@@ -92,7 +92,14 @@ class ParsedFile:
 
 def decode(raw):
     if raw.startswith(b"\xef\xbb\xbf"):
-        return raw[3:].decode("utf-8"), "utf-8-sig"
+        body = raw[3:]
+        try:
+            return body.decode("utf-8"), "utf-8-sig"
+        except UnicodeDecodeError:
+            try:
+                return body.decode("cp1252"), "cp1252"
+            except UnicodeDecodeError as exc:
+                raise UndecodableFile("not UTF-8 or Windows-1252: %s" % exc)
     if raw.startswith(b"\xff\xfe") or raw.startswith(b"\xfe\xff"):
         try:
             return raw.decode("utf-16"), "utf-16"
@@ -126,10 +133,11 @@ def norm_ref(text):
 
 
 def norm_code(text):
-    s = text.strip().upper()
-    if not re.fullmatch(r"[A-Z0-9]{2,8}", s):
+    # Check for ASCII before upper-casing: the fi ligature upper-cases to the ASCII "FI".
+    s = text.strip()
+    if not s.isascii() or not re.fullmatch(r"[A-Z0-9]{2,8}", s.upper()):
         raise ValueError("bad charge code %r" % text)
-    return s
+    return s.upper()
 
 
 def _build_date(y, m, d):
@@ -212,12 +220,13 @@ def _parse_csv_a(text, out):
     reader = csv.reader(io.StringIO(text, newline=""), strict=True)
     index = None
     while True:
+        start = reader.line_num + 1
         try:
             cells = next(reader)
         except StopIteration:
             break
         except csv.Error as exc:
-            out.rejects.append(Reject(reader.line_num, "bad quoting: %s" % exc))
+            out.rejects.append(Reject(start, "bad quoting: %s" % exc))
             continue
         line_no = reader.line_num
         if not any(c.strip() for c in cells):

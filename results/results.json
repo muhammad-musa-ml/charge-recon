@@ -5,6 +5,7 @@
    "files_delivered": 20,
    "findings": 54,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 4,
     "ach_violations_seen": 0,
     "exact": 301,
@@ -19,6 +20,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 259,
@@ -34,6 +36,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 331,
@@ -68,6 +71,7 @@
    "files_delivered": 26,
    "findings": 41,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 6,
     "ach_violations_seen": 0,
     "exact": 270,
@@ -82,6 +86,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 6,
     "ach_violations_seen": 6,
     "exact": 169,
@@ -97,6 +102,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 6,
     "ach_violations_seen": 6,
     "exact": 287,
@@ -130,6 +136,7 @@
    "files_delivered": 23,
    "findings": 79,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 4,
     "ach_violations_seen": 0,
     "exact": 318,
@@ -144,6 +151,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 227,
@@ -159,6 +167,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 348,
@@ -193,6 +202,7 @@
    "files_delivered": 21,
    "findings": 50,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 3,
     "ach_violations_seen": 0,
     "exact": 330,
@@ -207,6 +217,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 262,
@@ -222,6 +233,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 361,
@@ -256,6 +268,7 @@
    "files_delivered": 19,
    "findings": 59,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 2,
     "ach_violations_seen": 0,
     "exact": 332,
@@ -270,6 +283,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 265,
@@ -285,6 +299,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 353,
@@ -319,6 +334,7 @@
    "files_delivered": 20,
    "findings": 55,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 2,
     "ach_violations_seen": 0,
     "exact": 286,
@@ -333,6 +349,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 215,
@@ -348,6 +365,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 310,
@@ -382,6 +400,7 @@
    "files_delivered": 24,
    "findings": 53,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 3,
     "ach_violations_seen": 0,
     "exact": 343,
@@ -396,6 +415,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 236,
@@ -411,6 +431,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 372,
@@ -445,6 +466,7 @@
    "files_delivered": 23,
    "findings": 51,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 4,
     "ach_violations_seen": 0,
     "exact": 308,
@@ -459,6 +481,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 149,
@@ -474,6 +497,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 342,
@@ -508,6 +532,7 @@
    "files_delivered": 26,
    "findings": 65,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 5,
     "ach_violations_seen": 0,
     "exact": 332,
@@ -522,6 +547,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 5,
     "ach_violations_seen": 5,
     "exact": 126,
@@ -537,6 +563,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 5,
     "ach_violations_seen": 5,
     "exact": 358,
@@ -571,6 +598,7 @@
    "files_delivered": 23,
    "findings": 50,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 5,
     "ach_violations_seen": 0,
     "exact": 302,
@@ -585,6 +613,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 5,
     "ach_violations_seen": 5,
     "exact": 242,
@@ -600,6 +629,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 5,
     "ach_violations_seen": 5,
     "exact": 327,
@@ -634,6 +664,7 @@
    "files_delivered": 23,
    "findings": 40,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 3,
     "ach_violations_seen": 0,
     "exact": 327,
@@ -648,6 +679,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 225,
@@ -663,6 +695,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 348,
@@ -697,6 +730,7 @@
    "files_delivered": 20,
    "findings": 55,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 3,
     "ach_violations_seen": 0,
     "exact": 315,
@@ -711,6 +745,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 250,
@@ -726,6 +761,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 3,
     "ach_violations_seen": 3,
     "exact": 337,
@@ -760,6 +796,7 @@
    "files_delivered": 26,
    "findings": 46,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 6,
     "ach_violations_seen": 0,
     "exact": 287,
@@ -774,6 +811,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 6,
     "ach_violations_seen": 6,
     "exact": 162,
@@ -789,6 +827,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 6,
     "ach_violations_seen": 6,
     "exact": 311,
@@ -823,6 +862,7 @@
    "files_delivered": 20,
    "findings": 52,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 7,
     "ach_violations_seen": 0,
     "exact": 317,
@@ -837,6 +877,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 7,
     "ach_violations_seen": 7,
     "exact": 257,
@@ -852,6 +893,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 7,
     "ach_violations_seen": 7,
     "exact": 337,
@@ -886,6 +928,7 @@
    "files_delivered": 21,
    "findings": 67,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 2,
     "ach_violations_seen": 0,
     "exact": 334,
@@ -900,6 +943,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 223,
@@ -915,6 +959,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 358,
@@ -949,6 +994,7 @@
    "files_delivered": 21,
    "findings": 53,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 8,
     "ach_violations_seen": 0,
     "exact": 285,
@@ -963,6 +1009,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 8,
     "ach_violations_seen": 8,
     "exact": 200,
@@ -978,6 +1025,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 8,
     "ach_violations_seen": 8,
     "exact": 304,
@@ -1011,6 +1059,7 @@
    "files_delivered": 26,
    "findings": 49,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 1,
     "ach_violations_seen": 0,
     "exact": 312,
@@ -1025,6 +1074,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 1,
     "ach_violations_seen": 1,
     "exact": 150,
@@ -1040,6 +1090,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 1,
     "ach_violations_seen": 1,
     "exact": 336,
@@ -1074,6 +1125,7 @@
    "files_delivered": 24,
    "findings": 50,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 4,
     "ach_violations_seen": 0,
     "exact": 299,
@@ -1088,6 +1140,7 @@
     "wrong_kinds": 1
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 179,
@@ -1103,6 +1156,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 324,
@@ -1136,6 +1190,7 @@
    "files_delivered": 20,
    "findings": 37,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 4,
     "ach_violations_seen": 0,
     "exact": 281,
@@ -1150,6 +1205,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 164,
@@ -1165,6 +1221,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 4,
     "ach_violations_seen": 4,
     "exact": 305,
@@ -1199,6 +1256,7 @@
    "files_delivered": 20,
    "findings": 41,
    "naive_ach": {
+    "ach_violation_ids_match": false,
     "ach_violations_expected": 2,
     "ach_violations_seen": 0,
     "exact": 285,
@@ -1213,6 +1271,7 @@
     "wrong_kinds": 0
    },
    "naive_ingest": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 170,
@@ -1228,6 +1287,7 @@
    },
    "order_stable": true,
    "recon": {
+    "ach_violation_ids_match": true,
     "ach_violations_expected": 2,
     "ach_violations_seen": 2,
     "exact": 308,
@@ -1259,6 +1319,7 @@
   }
  ],
  "totals": {
+  "ach_violation_ids_matched_seeds": 20,
   "ach_violations_expected": 78,
   "ach_violations_seen": 78,
   "exact": 6657,
@@ -1268,15 +1329,29 @@
   "keys": 6657,
   "keys_per_seed_max": 372,
   "keys_per_seed_min": 287,
+  "kinds_only_in_unit_tests": [
+   "COLLECTED_NOT_POSTED",
+   "CONFLICT"
+  ],
+  "kinds_the_seeded_faults_can_produce": [
+   "AMOUNT_MISMATCH",
+   "NOT_COLLECTED",
+   "NOT_POSTED",
+   "OVERCOLLECTED",
+   "UNDERCOLLECTED",
+   "UNEXPECTED_POSTING"
+  ],
   "missed": 0,
   "naive_ach_exact": 6164,
   "naive_ach_exact_max_pct": 94.1,
   "naive_ach_exact_min_pct": 90.1,
   "naive_ach_missed": 124,
   "naive_ach_spurious": 360,
+  "naive_ach_wrong_kinds": 9,
   "naive_ingest_exact": 4130,
   "naive_ingest_exact_max_pct": 78.2,
   "naive_ingest_exact_min_pct": 35.2,
+  "naive_ingest_missed": 0,
   "naive_ingest_spurious": 2334,
   "naive_ingest_wrong_kinds": 193,
   "order_stable_seeds": 20,

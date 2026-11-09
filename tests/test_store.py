@@ -1,3 +1,4 @@
+import hashlib
 import itertools
 import sqlite3
 import unittest
@@ -89,6 +90,28 @@ class Ingest(StoreCase):
         self.assertEqual(amounts(s1), amounts(s2))
         self.assertEqual(s1.conflicts(), [(P1, "101", "R-1", "INS", "2026-07")])
         self.assertEqual(s1.conflicts(), s2.conflicts())
+
+    def test_the_tie_goes_to_the_file_with_the_larger_hash(self):
+        a, b = make_csv(JUL), make_csv(JUL_FIXED)
+        winner = a if hashlib.sha256(a).hexdigest() > hashlib.sha256(b).hexdigest() else b
+        want = 1450 if winner is a else 1500
+        for first, second in [(a, b), (b, a)]:
+            s = self.new_store()
+            s.ingest(first, P1, "x", T1)
+            s.ingest(second, P1, "y", T1)
+            self.assertEqual(amounts(s)[("101", "INS", "2026-07")], want)
+
+    def test_an_amount_sqlite_cannot_hold_quarantines_the_file(self):
+        s = self.new_store()
+        raw = (
+            "Unit,Resident ID,Charge Code,Amount,Post Date\r\n"
+            "0101,R-1,INS,99999999999999999999.00,07/01/2026\r\n"
+            "TOTAL,,,99999999999999999999.00,\r\n"
+        ).encode("ascii")
+        r = s.ingest(raw, P1, "big.csv", T1)
+        self.assertEqual(r.status, "quarantined")
+        self.assertTrue(any("too large" in p for p in r.problems))
+        self.assertEqual(s.current_charges(), [])
 
     def test_no_conflict_when_the_tied_files_agree(self):
         s = self.new_store()

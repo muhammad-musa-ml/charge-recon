@@ -26,5 +26,28 @@ class StoredResults(unittest.TestCase):
             self.assertEqual(json.load(f), json.loads(json.dumps({"totals": totals, "seeds": runs})))
 
 
+class SummaryTable(unittest.TestCase):
+    def test_every_cell_is_a_sum_of_the_per_seed_rows(self):
+        with open(os.path.join(ROOT, "results", "results.json"), encoding="utf-8") as f:
+            seeds = json.load(f)["seeds"]
+        with open(os.path.join(ROOT, "results", "results.md"), encoding="utf-8") as f:
+            md = f.read()
+
+        def tot(approach, field):
+            return sum(s[approach][field] for s in seeds)
+
+        n = tot("recon", "keys")
+        labels = {
+            "recon": "this pipeline",
+            "naive_ingest": "add up every row of every file, then the same ACH replay",
+            "naive_ach": "this ingest, then count every settled event as collected",
+        }
+        for approach, label in labels.items():
+            exact, missed, spurious, wrong = (tot(approach, k) for k in ("exact", "missed", "spurious", "wrong_kinds"))
+            with self.subTest(approach=approach):
+                self.assertEqual(exact + missed + spurious + wrong, n)
+                self.assertIn("| %s | %d of %d | %d | %d | %d |" % (label, exact, n, missed, spurious, wrong), md)
+
+
 if __name__ == "__main__":
     unittest.main()

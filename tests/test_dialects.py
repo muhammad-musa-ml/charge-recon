@@ -4,6 +4,7 @@ from datetime import date
 from chargerecon.dialects import (
     UndecodableFile,
     UnknownDialect,
+    norm_code,
     norm_unit,
     parse,
 )
@@ -72,6 +73,12 @@ class CsvA(unittest.TestCase):
         self.assertEqual(p.rows, [])
         self.assertTrue(p.problems())
 
+    def test_dates_outside_2000_to_2100_are_refused(self):
+        lines = ["0101,R-1,INS,1.00,01/01/1999", "0102,R-2,INS,1.00,01/01/2101", "0103,R-3,INS,1.00,01/01/2000"]
+        p = parse(csv_file(lines, total="1.00"))
+        self.assertEqual([r.line_no for r in p.rejects], [2, 3])
+        self.assertEqual(len(p.rows), 1)
+
     def test_control_total_mismatch_is_a_problem(self):
         p = parse(csv_file(GOOD_CSV_ROWS, total="1,200.01"))
         self.assertEqual(p.rejects, [])
@@ -95,24 +102,37 @@ class CsvA(unittest.TestCase):
         self.assertIn("duplicate key", p.rejects[0].reason)
 
     def test_unicode_line_separator_inside_a_field_does_not_split_the_row(self):
-        raw = csv_file(['0101,"R-10 0",INS,14.50,07/01/2026'], total="14.50")
+        raw = csv_file(['0101,"R-10\u20280",INS,14.50,07/01/2026'], total="14.50")
         p = parse(raw)
         self.assertEqual(p.problems(), [])
         self.assertEqual(len(p.rows), 1)
 
     def test_encodings(self):
-        text = csv_file(['0101,"René-1",INS,14.50,07/01/2026'], total="14.50", bom=False).decode("utf-8")
+        text = csv_file(['0101,"Ren\u00e9-1",INS,14.50,07/01/2026'], total="14.50", bom=False).decode("utf-8")
         cp = parse(text.encode("cp1252"))
-        self.assertEqual((cp.encoding, cp.rows[0].resident_ref), ("cp1252", "RENÉ-1"))
+        self.assertEqual((cp.encoding, cp.rows[0].resident_ref), ("cp1252", "REN\u00c9-1"))
         u16 = parse(text.encode("utf-16"))
         self.assertEqual((u16.encoding, u16.problems()), ("utf-16", []))
         with self.assertRaises(UndecodableFile):
             parse(b"Unit,Resident ID,Charge Code,Amount,Post Date\r\n\x81\x8d\r\n")
 
-    def test_broken_quoting_is_a_reject_not_a_crash(self):
+    def test_broken_quoting_is_a_reject_at_the_line_it_starts_on(self):
         lines = ['0101,"R-1,INS,14.50,07/01/2026', GOOD_CSV_ROWS[0]]
         p = parse(csv_file(lines, total="14.50"))
-        self.assertTrue(p.rejects)
+        self.assertEqual([(r.line_no, r.reason.split(":")[0]) for r in p.rejects], [(2, "bad quoting")])
+
+    def test_a_bom_file_with_a_windows_1252_byte_is_read_not_a_crash(self):
+        raw = b"\xef\xbb\xbf" + csv_file(['0101,"Ren\u00e9-1",INS,14.50,07/01/2026'], total="14.50", bom=False).decode("utf-8").encode("cp1252")
+        p = parse(raw)
+        self.assertEqual((p.encoding, p.problems(), p.rows[0].resident_ref), ("cp1252", [], "REN\u00c9-1"))
+
+    def test_charge_codes_are_ascii(self):
+        for code in ["\ufb01", "\u00df1", "I\u0307N"]:
+            with self.subTest(code=code):
+                with self.assertRaises(ValueError):
+                    norm_code(code)
+        p = parse(csv_file(["0101,R-1,\ufb01,1.00,07/01/2026"], total="1.00"))
+        self.assertEqual(len(p.rejects), 1)
 
 
 def pipe_file(rows, trailer=None, extra_header=False):
@@ -155,6 +175,12 @@ class PipeB(unittest.TestCase):
         p = parse(pipe_file(["T|R-1|INS|1.00|20260701"], "T|1|1.00"))
         self.assertEqual(p.problems(), [])
         self.assertEqual(p.rows[0].unit, "T")
+
+    def test_unicode_line_separator_inside_a_field_does_not_split_the_row(self):
+        text = "UnitNo|TenantRef|Code|Amt|PostedOn\n0101|R-10\u20280|INS|14.50|20260701\nT|1|14.50\n"
+        p = parse(text.encode("utf-8"))
+        self.assertEqual(p.problems(), [])
+        self.assertEqual(len(p.rows), 1)
 
     def test_pipe_file_must_start_with_header(self):
         with self.assertRaises(UnknownDialect):
@@ -221,7 +247,7 @@ class UnitNames(unittest.TestCase):
         self.assertEqual(norm_unit(" a-101 "), "A-101")
         self.assertEqual(norm_unit("A 101"), "A101")
         self.assertEqual(norm_unit("000"), "0")
-        self.assertEqual(norm_unit("٣"), "٣")  # not an ASCII digit, left alone
+        self.assertEqual(norm_unit("\u0663"), "\u0663")  # not an ASCII digit, left alone
 
 
 if __name__ == "__main__":

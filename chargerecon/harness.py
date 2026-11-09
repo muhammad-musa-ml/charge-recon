@@ -44,6 +44,7 @@ def score(world, report):
         "wrong_kinds": c["wrong_kinds"],
         "ach_violations_expected": t.violations,
         "ach_violations_seen": len(report.ach_violations),
+        "ach_violation_ids_match": {v.payment_id for v in report.ach_violations} == t.violation_payments,
         "quarantined_expected": t.quarantined_files,
         "quarantined_seen": len(report.quarantined),
         "pending_expected": len(t.pending),

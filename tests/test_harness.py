@@ -23,6 +23,7 @@ class EndToEnd(unittest.TestCase):
             s = r["recon"]
             with self.subTest(seed=seed):
                 self.assertEqual(s["ach_violations_seen"], s["ach_violations_expected"])
+                self.assertTrue(s["ach_violation_ids_match"])
                 self.assertEqual(s["quarantined_seen"], s["quarantined_expected"])
                 self.assertTrue(s["pending_match"])
 

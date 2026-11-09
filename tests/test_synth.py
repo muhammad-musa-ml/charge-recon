@@ -29,6 +29,8 @@ class Generator(unittest.TestCase):
         joined = b"\n".join(raws)
         self.assertTrue(any(r.startswith(b"\xef\xbb\xbf") for r in raws), "no BOM anywhere")
         self.assertIn(b"\r\n", joined)
+        # the pipe and fixed files always use CRLF, so a file with bare LF is a CSV
+        self.assertTrue(any(b"\r\n" not in r and b"\n" in r for r in raws), "no LF-only file")
         self.assertIn(b"$", joined)
         self.assertIn(b',"1,', joined)  # a thousands separator inside quotes
         self.assertIn(b"unitno|tenantref", joined)  # a page header in another case

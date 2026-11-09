@@ -8,7 +8,8 @@ that later statement is the one in force.
 Every row of every accepted file is kept as a sighting. The charge in force for
 a key is the sighting from the file with the latest as_of, ties broken by file
 hash. That is a function of the set of files, not of the order they arrived
-in, so a replayed, reordered or late file cannot change the result.
+in, so a replayed or reordered file cannot change the result. as_of is trusted:
+a stale export stamped with a later as_of replaces a correction made before it.
 
 A file is accepted whole or quarantined whole: a file with one unreadable row
 or a wrong control total posts nothing.

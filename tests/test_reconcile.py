@@ -4,7 +4,7 @@ from datetime import date
 from chargerecon import reconcile as rc
 from chargerecon.ach import Event, replay
 from chargerecon.store import Store
-from tests.test_store import JUL, T1, make_csv
+from tests.test_store import JUL, JUL_FIXED, T1, make_csv
 
 KEY = ("P1", "101", "R-1", "INS", "2026-07")
 KEY2 = ("P1", "102", "R-2", "INS", "2026-07")
@@ -131,6 +131,15 @@ class TieOut(unittest.TestCase):
 
 
 class WithTheStore(unittest.TestCase):
+    def test_two_files_that_disagree_at_the_same_time_are_a_finding(self):
+        store = Store()
+        self.addCleanup(store.close)
+        store.ingest(make_csv(JUL), "P1", "a.csv", T1)
+        store.ingest(make_csv(JUL_FIXED), "P1", "b.csv", T1)
+        report = rc.reconcile_store({KEY: AMOUNT}, store, replay([]))
+        self.assertIn(rc.CONFLICT, report.kinds_by_key()[KEY])
+
+
     def test_files_and_events_to_a_report(self):
         store = Store()
         self.addCleanup(store.close)

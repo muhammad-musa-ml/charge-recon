@@ -53,7 +53,7 @@ class ParseAmount(unittest.TestCase):
 
     def test_other_scripts_are_not_digits(self):
         # str.isdigit() and \d accept these; an amount made of them is not money.
-        for text in ["٣.00", "12.٥٠", "１２.00"]:
+        for text in ["\u0663.00", "12.\u0665\u0660", "\uff11\uff12.00"]:
             with self.subTest(text=text):
                 with self.assertRaises(MoneyError):
                     parse_amount(text)
@@ -62,6 +62,15 @@ class ParseAmount(unittest.TestCase):
         # 2**53 + 1 cents: a float cannot hold this value, an int can.
         self.assertEqual(parse_amount("90071992547409.93"), 2**53 + 1)
         self.assertEqual(parse_amount("0.10") + parse_amount("0.20"), parse_amount("0.30"))
+
+    def test_amounts_a_sqlite_integer_cannot_hold_are_refused(self):
+        self.assertEqual(parse_amount("92233720368547758.07"), 2**63 - 1)
+        for text in ["92233720368547758.08", "99999999999999999999.00", "-92233720368547758.09"]:
+            with self.subTest(text=text):
+                with self.assertRaises(MoneyError):
+                    parse_amount(text)
+        with self.assertRaises(MoneyError):
+            parse_implied_cents("9223372036854775808")
 
     def test_text_only(self):
         for value in [12.5, 12, None]:
@@ -77,7 +86,7 @@ class ImpliedCents(unittest.TestCase):
         self.assertEqual(parse_implied_cents("   1450  "), 1450)
 
     def test_refused(self):
-        for text in ["", "12.50", "00004x000", "--1", "٣٣"]:
+        for text in ["", "12.50", "00004x000", "--1", "\u0663\u0663"]:
             with self.subTest(text=text):
                 with self.assertRaises(MoneyError):
                     parse_implied_cents(text)
